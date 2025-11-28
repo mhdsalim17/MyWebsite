@@ -4,29 +4,24 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/mhdsalim17/MyWebsite.git'
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']], // ou '*/master' selon votre branche
+                    extensions: [],
+                    userRemoteConfigs: [[url: 'https://github.com/mhdsalim17/MyWebsite.git']]
+                ])
             }
         }
         
         stage('Validation') {
             steps {
-                bat '''
-                    echo 🏗️ VALIDATION DU SITE WEB
-                    echo 📁 Fichiers détectés:
-                    dir *.html /B
-                    echo ✅ Structure validée
-                '''
+                // Vos étapes de validation
             }
         }
         
         stage('Déploiement') {
             steps {
-                bat '''
-                    echo 🚀 DÉPLOIEMENT AUTOMATIQUE
-                    echo 📍 Site: https://mhdsalim17.github.io/MyWebsite/
-                    echo ✅ Déployé via GitHub Pages
-                    echo 🎉 Terminé avec succès!
-                '''
+                // Vos étapes de déploiement
             }
         }
     }
@@ -34,9 +29,6 @@ pipeline {
     post {
         always {
             cleanWs()
-        }
-        success {
-            echo '✅ Site déployé avec succès!'
         }
     }
 }
